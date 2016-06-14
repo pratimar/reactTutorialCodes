@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>React Tutorial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.0.1/react-dom.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.6.16/browser.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
+  </head>
+  <body>
+    <div id="content"></div>
+    <script type="text/babel">
+        var EpisodeRow = React.createClass({
+            render: function () {
+                return (
+                    <tr>
+                        <td>{this.props.episode.title}</td>
+                        <td><a href="#">View</a> </td>
+                    </tr>
+                );
+            }
+        });
+
+        var EpisodeTable = React.createClass({
+            render : function () {
+                var props = this.props;
+                var rows = props.episodes
+                .filter(function(episode){
+                    return episode.title.toLowerCase().indexOf(props.filterText.toLowerCase()) > -1;
+                })
+                .map(function(episode) {
+                    return <EpisodeRow key={episode.title} episode={episode} />;
+                });
+                return (
+                    <div>
+                        <div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Link </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {rows}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                );
+            }
+        });
+
+        var SearchBar = React.createClass({
+            handleSearchChange : function () {
+                this.props.searchChanged(this.refs.filterTextInput.value);
+            },
+            render : function () {
+                return (
+                    <div>
+                        <div>
+                            <input type="text" ref="filterTextInput" placeholder="Search text" value={this.props.filterText} onChange={this.handleSearchChange}/>
+                        </div>
+                    </div>
+                );
+            }
+        });
+
+        var FilterableEpisodeTable = React.createClass({
+            getInitialState : function () {
+                return {
+                    filterText : ''
+                }
+            },
+            handleChange : function (filterText) {
+                this.setState({
+                    filterText : filterText
+                });
+            },
+            render : function () {
+                return (
+                    <div>
+                        <SearchBar filterText={this.state.filterText} searchChanged={this.handleChange} />
+                        <EpisodeTable episodes={this.props.episodes} filterText={this.state.filterText} />
+                    </div>
+                );
+            }
+        });
+
+        var Episodes = [
+            {
+                title: 'Angular with Yeoman',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'Using D3 with Rickshw and Angular',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'Canvas with paper.js',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'Express.js middleware',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'Mean Stack episode 1',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'ES6 episode 1',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'Mean stack episode 2',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'ES5 episode 2',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'ES5 episode 3',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            },
+            {
+                title: 'ES5 episode 4',
+                link: 'http://tagtree.tv.angular-with-yeoman',
+                date: new Date(2013, 11, 14)
+            }
+        ];
+
+        ReactDOM.render(<FilterableEpisodeTable episodes={Episodes} />, document.getElementById('content'));
+    </script>
+  </body>
+</html>
